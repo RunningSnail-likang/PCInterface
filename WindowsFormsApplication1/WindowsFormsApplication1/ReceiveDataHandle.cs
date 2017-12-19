@@ -140,10 +140,14 @@ namespace WindowsFormsApplication1
                         {
                             if (m == 0)
                             {
-                                Form1.voltageData = float.Parse(strTemp);//电压数据
+                                Form1.voltageData = strTemp;//电压数据(带单位)
+
                                 try
                                 {
-                                    Form1.resultData.voltageData.Add(Form1.voltageData);//画图列表中添加数据
+                                    string strTemp1 = strTemp.Substring(0,strTemp.Length-1);//去掉单位V
+                                    float volTemp = 0;//临时存储不带单位的电压数据，以便存入画图列表中
+                                    bool b1 = float.TryParse(strTemp1, out volTemp);//电压数据转换
+                                    Form1.resultData.voltageData.Add(volTemp);//画图列表中添加数据
                                 }                                
                                 catch (Exception e)
                                 {
@@ -155,10 +159,13 @@ namespace WindowsFormsApplication1
                             }
                             if (m == 1)
                             {
-                                Form1.leakElectricData = float.Parse(strTemp);//漏电流数据
+                                Form1.leakElectricData = strTemp;//漏电流数据(带单位)                               
                                 try
                                 {
-                                    Form1.resultData.leakElectricData.Add(Form1.leakElectricData);//画图列表中添加数据
+                                    string strTemp2 = strTemp.Substring(0, strTemp.Length - 2);//去掉单位nA
+                                    float leakElectricTemp = 0;//临时存储不带单位的漏电流数据，以便存入画图列表中
+                                    bool b2 = float.TryParse(strTemp2, out leakElectricTemp);//漏电流数据转换
+                                    Form1.resultData.leakElectricData.Add(leakElectricTemp);//画图列表中添加数据
                                 }
                                 catch (Exception e)
                                 {
@@ -170,16 +177,20 @@ namespace WindowsFormsApplication1
                                 strTemp = "";
                             }
                             m++;
+                            continue;
                         }
                         strTemp += c;
                     }
-                    Form1.insulationRes = float.Parse(strTemp);//绝缘电阻
+                    Form1.insulationRes = strTemp;//绝缘电阻
                     break;
                 case 1:
-                    Form1.electricData = float.Parse(str);//充放电流数据
+                    Form1.electricData = str;//充放电流数据(带单位)
                     try
                     {
-                        Form1.resultData.electricData.Add(Form1.electricData);//画图列表中添加数据
+                        string strTemp3 = str.Substring(0, str.Length - 2);//去掉单位mA
+                        float electricTemp = 0;//临时存储不带单位的充放电流数据，以便存入画图列表中
+                        bool b3 = float.TryParse(strTemp3, out electricTemp);//充放电流数据转换
+                        Form1.resultData.electricData.Add(electricTemp);//画图列表中添加数据
                     }                  
                     catch (Exception e)
                     {
@@ -189,7 +200,7 @@ namespace WindowsFormsApplication1
                     }
                     break;
                 case 2:
-                    Form1.changingPowerData = float.Parse(str);//充电功率
+                    Form1.changingPowerData = str;//充电功率
                     break;
                 case 3:
                     Form1.gearGain = str;//档位增益

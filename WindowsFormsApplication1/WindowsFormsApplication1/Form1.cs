@@ -16,11 +16,11 @@ namespace WindowsFormsApplication1
     public partial class Form1 : Form
     {
     
-        public static float voltageData;//电压数据
-        public static float electricData;//充放电流数据
-        public static float leakElectricData;//漏电流数据
-        public static float changingPowerData;//充电功率
-        public static float insulationRes;//绝缘电阻
+        public static string voltageData;//电压数据
+        public static string electricData;//充放电流数据
+        public static string leakElectricData;//漏电流数据
+        public static string changingPowerData;//充电功率
+        public static string insulationRes;//绝缘电阻
         public static string gearGain;//档位增益
         public static string patternData; //工作模式数据
         public SysSet.SettingsStruct setData = new SysSet.SettingsStruct();//定义设置的参数类
@@ -420,12 +420,12 @@ namespace WindowsFormsApplication1
         //显示解析后的结果参数
         public void ResultShow()
         {
-            voltage.Text = voltageData.ToString();//显示电压值
-            electric.Text = electricData.ToString();//显示电流值
-            leakElectric.Text = leakElectricData.ToString();//显示漏电流
-            changingPower.Text = changingPowerData.ToString();//显示充电功率
+            voltage.Text = voltageData;//显示电压值
+            electric.Text = electricData;//显示电流值
+            leakElectric.Text = leakElectricData;//显示漏电流
+            changingPower.Text = changingPowerData;//显示充电功率
             pattern.Text = patternData;//模式（工作状态）
-            Res.Text = insulationRes.ToString();//绝缘电阻
+            Res.Text = insulationRes;//绝缘电阻
             gGain.Text = gearGain;//档位增益
         }
         
@@ -434,7 +434,7 @@ namespace WindowsFormsApplication1
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Enabled = false;            
-            if (electricData != 0 && voltageData != 0 && leakElectricData != 0)//判断是不是第一次请求数据，即变量中有没有结果数据
+            if (electricData != "" && voltageData != "" && leakElectricData != "")//判断是不是第一次请求数据，即变量中有没有结果数据
             {
                 SaveDataToLocal.writeFile();//把电压电流和漏电流数据都存入到电脑中去
                 ResultShow();//显示结果刷新

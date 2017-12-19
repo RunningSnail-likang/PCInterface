@@ -51,7 +51,11 @@ namespace WindowsFormsApplication1
             string filePath = "D:\\mySave\\myData\\voltageData.txt";
             try
             {
-                byte[] b = BitConverter.GetBytes(Form1.voltageData);//把float类型的电压数据转换成byte类型存入电脑
+                //把float类型的电压数据转换成byte类型存入电脑（从画图列表中依次读取）
+                byte[] b = BitConverter.GetBytes(Form1.resultData.voltageData[Form1.resultData.voltageData.Count-1]);
+                b[b.Length] = 0x56;//加上单位V
+                b[b.Length] = 0x2C;//加上一个数据结束的标志：逗号（,）
+
                 fs = File.OpenWrite(filePath);
                 //设定书写的开始位置为文件的末尾  
                 fs.Position = fs.Length;
@@ -76,7 +80,12 @@ namespace WindowsFormsApplication1
             string filePath = "D:\\mySave\\myData\\electricData.txt";
             try
             {
-                byte[] b = BitConverter.GetBytes(Form1.electricData);//把float类型的电流数据转换成byte类型存入电脑
+                //把float类型的电流数据转换成byte类型存入电脑（从画图列表中依次读取）
+                byte[] b = BitConverter.GetBytes(Form1.resultData.electricData[Form1.resultData.electricData.Count - 1]);
+                b[b.Length] = 0x6D;//加上单位m
+                b[b.Length] = 0x41;//加上单位A
+                b[b.Length] = 0x2C;//加上一个数据结束的标志：逗号（,）
+
                 fs = File.OpenWrite(filePath);
                 //设定书写的开始位置为文件的末尾  
                 fs.Position = fs.Length;
@@ -101,7 +110,12 @@ namespace WindowsFormsApplication1
             string filePath = "D:\\mySave\\myData\\leakElectricData.txt";
             try
             {
-                byte[] b = BitConverter.GetBytes(Form1.leakElectricData);//把float类型的漏电流数据转换成byte类型存入电脑
+                //把float类型的漏电流数据转换成byte类型存入电脑（从画图列表中依次读取）
+                byte[] b = BitConverter.GetBytes(Form1.resultData.leakElectricData[Form1.resultData.leakElectricData.Count - 1]);
+                b[b.Length] = 0x6E;//加上单位n
+                b[b.Length] = 0x41;//加上单位A
+                b[b.Length] = 0x2C;//加上一个数据结束的标志：逗号（,）
+
                 fs = File.OpenWrite(filePath);
                 //设定书写的开始位置为文件的末尾  
                 fs.Position = fs.Length;
