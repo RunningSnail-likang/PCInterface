@@ -231,6 +231,81 @@ namespace WindowsFormsApplication1
             return ASCIIstr;
 
         }
+
+
+
+        //给下位机发送开始测试的指令函数
+        public static void SCPITestStart()
+        {
+            int sendCount = 0;//每条指令最多发送的次数变量，如果次数超过则报错
+            UsbIO.sendToARM(Form1.SCPITestStart + SCPIStrSumChkGet(Form1.SCPITestStart) + Form1.end1 + Form1.end2);
+            Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+            while (!Form1.SCPIsendSuccessFlag)
+            {
+                sendCount++;
+                Form1.Delay(900);//延时900ms
+                if (sendCount < 5)
+                {
+                    UsbIO.sendToARM(Form1.SCPITestStart + SCPIStrSumChkGet(Form1.SCPITestStart) + Form1.end1 + Form1.end2);
+                }
+                else
+                {
+                    break;
+                }
+                Form1.SCPIsendSuccessFlag = false;//返回该指令的接收成功信息后再把标志置为false
+            }
+            Form1.SCPIsendSuccessFlag = false;//返回该指令的接收成功信息后再把标志置为false
+            if (sendCount < 5)
+            {
+                sendCount = 0;
+                Form1.dialogMessageShow("设备已经开始测试！");
+            }
+            else
+            {
+                Form1.dialogMessageShow("设备开始测试失败，请检查设备！");
+            }
+        }
+
+
+
+
+        //给下位机发送停止测试的指令函数
+        public static void SCPITestStop()
+        {
+            int sendCount = 0;//每条指令最多发送的次数变量，如果次数超过则报错
+            UsbIO.sendToARM(Form1.SCPITestStop + SCPIStrSumChkGet(Form1.SCPITestStop) + Form1.end1 + Form1.end2);
+            Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+            while (!Form1.SCPIsendSuccessFlag)
+            {
+                sendCount++;
+                Form1.Delay(900);//延时900ms
+                if (sendCount < 5)
+                {
+                    UsbIO.sendToARM(Form1.SCPITestStop + SCPIStrSumChkGet(Form1.SCPITestStop) + Form1.end1 + Form1.end2);
+                }
+                else
+                {
+                    break;
+                }
+                Form1.SCPIsendSuccessFlag = false;//返回该指令的接收成功信息后再把标志置为false
+            }
+            Form1.SCPIsendSuccessFlag = false;//返回该指令的接收成功信息后再把标志置为false
+            if (sendCount < 5)
+            {
+                sendCount = 0;
+                Form1.dialogMessageShow("设备已停止测试！");
+            }
+            else
+            {
+                Form1.dialogMessageShow("设备停止测试失败，请检查设备！");
+            }
+        }
+
+
+
+
+
+
         //发送请求结果数据的函数
         public static void sendGet(string[] str)
         {

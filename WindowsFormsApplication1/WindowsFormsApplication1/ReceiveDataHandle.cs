@@ -108,7 +108,7 @@ namespace WindowsFormsApplication1
             Form1.SCPIsendSuccessFlag = true;//把下位机正确返回相应的信息标志置一，以便可以继续向下位机发送下一条指令
             if (str == Form1.successReceiveMes)
             {
-                //接收的是正确信息的指令               
+                //接收的是正确信息的指令 （：+0,”No error”）              
             }
             else
             {

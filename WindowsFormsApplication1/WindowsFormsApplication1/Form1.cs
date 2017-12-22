@@ -39,7 +39,9 @@ namespace WindowsFormsApplication1
         public static string[] SCPIsendGetData = { "RES:MEAS:ALL?", "STEP:DCW:HIGH?", "STEP:DCW:DPOW?", "STEP:DCW:RANG?", "STEP:DCW:STAG?" };//请求结果数据的SCPI指令
         public static string successReceiveMes = "+0,\"No error\"";//指令接收或者发送成功返回的信息  
         public static string SCPIDisconnect = "COMM:LOC";//退出远控状态的SCPI指令 
-        public static string SCPIReset = "*RST";//对设备进行复位的SCPI指令   
+        public static string SCPIReset = "*RST";//对设备进行复位的SCPI指令
+        public static string SCPITestStart = "SOUR:TEST:STAR";//对设备启动测试的SCPI指令(开始测试)
+        public static string SCPITestStop = "SOUR:TEST:STOP";//对设备停止测试的SCPI指令 （停止测试）  
         public static bool SCPIsendSuccessFlag = false;//每条SCPI指令发送给下位机成功的标志        
         public static bool time3Flag = false;//定时器三到的标志
         public static float xUnitTime = 0;//请求数据频率的定时器1的定时时间      
@@ -468,6 +470,7 @@ namespace WindowsFormsApplication1
             TaskGatherRealTime.Start();//开始接受绘图数据的线程
             SaveDataToLocal.createPathFile();//创建指定目录和存储数据的txt文件
             testStartFlag = true;//开始测试标志置一
+            SendDataHandle.SCPITestStart();//给下位机发送开始测试的指令
             UsbIO.form1.textBox14.Text = "正在测试"; //显示测试状态
             UsbIO.form1.timer1.Interval = Convert.ToInt32(UsbIO.form1.textBox2.Text);//把设置的请求时间间隔设置到定时器1中去
             float a = UsbIO.form1.timer1.Interval;
@@ -478,6 +481,7 @@ namespace WindowsFormsApplication1
         //测试关闭的函数
         public static void closeTest()
         {
+            SendDataHandle.SCPITestStop();//给下位机发送停止测试的指令
             UsbIO.DataRecieveStop();//停止接收接收数据
             Form1.isGather = false;//停止绘图显示的线程
             Form1.testStartFlag = false;//开始测试标志置零
