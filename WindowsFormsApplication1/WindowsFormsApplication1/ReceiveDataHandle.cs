@@ -15,7 +15,7 @@ namespace WindowsFormsApplication1
             foreach (byte b in buf)
             {
                 Form1.receiveTempData.Add(b);
-                //UsbIO.receiveDataShow(System.Text.Encoding.Default.GetString(Form1.receiveTempData.ToArray()));//调用方法把接收到的SCPI指令信息显示到接收数据窗口
+                
                 if (b == Form1.end1)
                 {
                     endFlag = true;
@@ -43,7 +43,7 @@ namespace WindowsFormsApplication1
             low = (byte)(low | 0x80);
             if (low == buf[buf.Length - 3])
             {
-                //UsbIO.sendToARM(Form1.successReceiveMes + SendDataHandle.SCPIStrSumChkGet(Form1.successReceiveMes) + Form1.end1 + Form1.end2);//发送指令接收成功信息
+                
                 SCPIReceiveAnalysis(Form1.receiveTempData.ToArray());//显示并解析收到的SCPI指令
             }
             else
@@ -113,14 +113,67 @@ namespace WindowsFormsApplication1
             else
             {
 
-
-                //确定是请求得到的结果参数 
-                SCPIResultGetSave(str);
-                Form1.SCPIGetDataCount++;//用来标志当前发送的是请求什么数据的指令
-                if (Form1.SCPIGetDataCount > 4)
+                //确定是请求得到的结果参数
+                if (str.Contains("nA/"))
                 {
+                    //返回的是测量电压，漏电流和绝缘电阻数据
                     Form1.SCPIGetDataCount = 0;
+
                 }
+                if (str.Contains("mA"))
+                {
+                    //返回的是充放电流数据
+                    Form1.SCPIGetDataCount = 1;
+
+                }
+                if (str.Contains("w"))
+                {
+                    //返回的是充电功率
+                    Form1.SCPIGetDataCount = 2;
+
+                }
+                if (str.Contains("/")&&!str.Contains("nA/"))
+                {
+                    //返回的是档位增益
+                    Form1.SCPIGetDataCount = 3;
+
+                }
+                if (str.Contains("Idle")|| str.Contains("Char") || str.Contains("Meas") || str.Contains("Disc"))
+                {
+                    //返回的是工作模式数据
+                    Form1.SCPIGetDataCount = 4;
+
+                }
+                if (str.Contains("V") && !str.Contains("/"))
+                {
+                    //返回的是输出电压数据
+                    Form1.SCPIGetDataCount = 5;
+
+                }
+                SCPIResultGetSave(str);
+
+
+
+
+
+
+                /*
+                //确定是请求得到的结果参数 
+                if (Form1.testStartFlag)
+                {
+                    SCPIResultGetSave(str);
+                    Form1.SCPIGetDataCount++;//用来标志当前发送的是请求什么数据的指令
+                    if (Form1.SCPIGetDataCount > 4)
+                    {
+                        Form1.SCPIGetDataCount = 0;
+                    }
+                }else
+                {
+                    //  
+                }
+                */
+
+
 
             }
 
@@ -140,21 +193,8 @@ namespace WindowsFormsApplication1
                         {
                             if (m == 0)
                             {
-                                Form1.voltageData = strTemp;//电压数据(带单位)
-
-                                try
-                                {
-                                    string strTemp1 = strTemp.Substring(0,strTemp.Length-1);//去掉单位V
-                                    float volTemp = 0;//临时存储不带单位的电压数据，以便存入画图列表中
-                                    bool b1 = float.TryParse(strTemp1, out volTemp);//电压数据转换
-                                    Form1.resultData.voltageData.Add(volTemp);//画图列表中添加数据
-                                }                                
-                                catch (Exception e)
-                                {
-                                    Form1.dialogMessageShow("数据添加画图列表发生异常，请检查！");
-                                    String errorInfo = e.Message;
-                                    Console.WriteLine(errorInfo);
-                                }
+                                Form1.measureVoltageData = strTemp;//测量电压数据(带单位)
+                                Form1.measureVoltageDataTemp = strTemp.Substring(0, strTemp.Length - 1);//去掉单位V，存放在暂存字符串中以便写入相应的TXT文档  
                                 strTemp = "";
                             }
                             if (m == 1)
@@ -207,6 +247,23 @@ namespace WindowsFormsApplication1
                     break;
                 case 4:
                     Form1.patternData = str;//工作模式数据
+                    break;
+                case 5:
+                    Form1.outputVoltageData = str;//输出电压数据
+                    try
+                    {
+                        string strTemp1 = str.Substring(0, str.Length - 1);//去掉单位V
+                        float volTemp = 0;//临时存储不带单位的输出电压数据，以便存入画图列表中
+                        bool b1 = float.TryParse(strTemp1, out volTemp);//电压数据转换
+                        Form1.resultData.voltageData.Add(volTemp);//画图列表中添加数据
+                    }
+                    catch (Exception e)
+                    {
+                        Form1.dialogMessageShow("数据添加画图列表发生异常，请检查！");
+                        String errorInfo = e.Message;
+                        Console.WriteLine(errorInfo);
+                    }
+                    strTemp = "";
                     break;
                 default:
                     Form1.dialogMessageShow("请求结果参数发生异常（结果解析出错，SCPIGetDataCount>4），请检查！");//调用显示对话框函数

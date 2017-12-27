@@ -34,11 +34,14 @@ namespace WindowsFormsApplication1
             {
                 try
                 {
-                    
-                    //刷新绘图
-                    voltageGraph.Invoke(voltageUpdate, resultData.voltageData);
-                    electricGraph.Invoke(electricUpdate, resultData.electricData);
-                    leakElectricGraph.Invoke(leakElectricUpdate, resultData.leakElectricData);
+                    if (Form1.huatuFlag)
+                    {
+                        //刷新绘图
+                        voltageGraph.Invoke(voltageUpdate, resultData.voltageData);
+                        electricGraph.Invoke(electricUpdate, resultData.electricData);
+                        leakElectricGraph.Invoke(leakElectricUpdate, resultData.leakElectricData);
+                        Form1.huatuFlag = false;
+                    }
 
 
                 }

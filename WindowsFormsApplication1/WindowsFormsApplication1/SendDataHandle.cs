@@ -13,18 +13,20 @@ namespace WindowsFormsApplication1
         public static bool SCPIConnect()
         {
             int sendCount = 0;//每条指令最多发送的次数变量，如果次数超过则报错
-            UsbIO.sendToARM(Form1.successReceiveMes + SCPIStrSumChkGet(Form1.successReceiveMes) + Form1.end1 + Form1.end2);
+
             foreach (string s in Form1.SCPIConnect)
             {
-                UsbIO.sendToARM(s+SCPIStrSumChkGet(s)+Form1.end1+Form1.end2);
-                Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+                //UsbIO.sendToARM(s+ SCPIStrSumChkGet(s) + Form1.end1+Form1.end2);
+                UsbIO.sendToARM(s);
+                Form1.Delay(40);//先延时40ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
                 while (!Form1.SCPIsendSuccessFlag)
                 {
                     sendCount++;
                     Form1.Delay(900);//延时900ms
                     if (sendCount < 5)
                     {
-                        UsbIO.sendToARM(s + SCPIStrSumChkGet(s) + Form1.end1 + Form1.end2);
+                        //UsbIO.sendToARM(s + SCPIStrSumChkGet(s) + Form1.end1 + Form1.end2);
+                        UsbIO.sendToARM(s);
                     }
                     else
                     {
@@ -37,12 +39,13 @@ namespace WindowsFormsApplication1
                     sendCount = 0;
                 }
                 else
-                {                
+                {
                     Form1.dialogMessageShow("SCPI联机指令发送失败");
                     break;
                 }
                 Form1.SCPIsendSuccessFlag = false;//返回该指令的接收成功信息后再把标志置为false
             }
+            //UsbIO.sendToARM(Form1.successReceiveMes + SCPIStrSumChkGet(Form1.successReceiveMes) + Form1.end1 + Form1.end2);
             Form1.SCPIsendSuccessFlag = false;//返回该指令的接收成功信息后再把标志置为false
             if (sendCount == 0)
             {
@@ -52,22 +55,24 @@ namespace WindowsFormsApplication1
             {
                 return false;
             }
-            
+
         }
 
         //发送退出远控状态的SCPI指令给下位机，实现断开连接的操作
         public static void SCPICDisconnect()
         {
             int sendCount = 0;//每条指令最多发送的次数变量，如果次数超过则报错
-            UsbIO.sendToARM(Form1.SCPIDisconnect + SCPIStrSumChkGet(Form1.SCPIDisconnect) + Form1.end1 + Form1.end2);
-            Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+            //UsbIO.sendToARM(Form1.SCPIDisconnect + (char)SCPIStrSumChkGet(Form1.SCPIDisconnect) + Form1.end1 + Form1.end2);
+            UsbIO.sendToARM(Form1.SCPIDisconnect);
+            Form1.Delay(40);//先延时40ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
             while (!Form1.SCPIsendSuccessFlag)
             {
                 sendCount++;
                 Form1.Delay(900);//延时900ms
                 if (sendCount < 5)
                 {
-                    UsbIO.sendToARM(Form1.SCPIDisconnect + SCPIStrSumChkGet(Form1.SCPIDisconnect) + Form1.end1 + Form1.end2);
+                    //UsbIO.sendToARM(Form1.SCPIDisconnect + (char)SCPIStrSumChkGet(Form1.SCPIDisconnect) + Form1.end1 + Form1.end2);
+                    UsbIO.sendToARM(Form1.SCPIDisconnect);
                 }
                 else
                 {
@@ -91,15 +96,17 @@ namespace WindowsFormsApplication1
         public static void reset()
         {
             int sendCount = 0;//每条指令最多发送的次数变量，如果次数超过则报错
-            UsbIO.sendToARM(Form1.SCPIReset + SCPIStrSumChkGet(Form1.SCPIReset) + Form1.end1 + Form1.end2);
-            Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+            //UsbIO.sendToARM(Form1.SCPIReset + SCPIStrSumChkGet(Form1.SCPIReset) + Form1.end1 + Form1.end2);
+            UsbIO.sendToARM(Form1.SCPIReset);
+            Form1.Delay(40);//先延时40ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
             while (!Form1.SCPIsendSuccessFlag)
             {
                 sendCount++;
                 Form1.Delay(900);//延时900ms
                 if (sendCount < 5)
                 {
-                    UsbIO.sendToARM(Form1.SCPIReset + SCPIStrSumChkGet(Form1.SCPIReset) + Form1.end1 + Form1.end2);
+                    //UsbIO.sendToARM(Form1.SCPIReset + SCPIStrSumChkGet(Form1.SCPIReset) + Form1.end1 + Form1.end2);
+                    UsbIO.sendToARM(Form1.SCPIReset);
                 }
                 else
                 {
@@ -130,7 +137,7 @@ namespace WindowsFormsApplication1
             foreach (string s in packData)
             {
                 UsbIO.sendToARM(s);
-                Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+                Form1.Delay(40);//先延时40ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
                 while (!Form1.SCPIsendSuccessFlag)
                 {
                     sendCount++;
@@ -198,8 +205,9 @@ namespace WindowsFormsApplication1
                 String errorInfo = e.Message;
                 Console.WriteLine(errorInfo);
             }
-            string[] arrayReturn = PackageDataOver(array);
-            return arrayReturn;//返回封装后的字符串或字符串数组
+            //string[] arrayReturn = PackageDataOver(array);
+
+            return array;//返回封装后的字符串或字符串数组
         }
 
         //把校验码和结束码加入指令中去
@@ -216,7 +224,7 @@ namespace WindowsFormsApplication1
         }
 
         //计算给定字符串的所有字符ASCII码值之和（即校验码），并把和转换成字符串返回
-        public static char SCPIStrSumChkGet(string str)
+        public static byte SCPIStrSumChkGet(string str)
         {
             int sum = 0;
             byte[] array = System.Text.Encoding.ASCII.GetBytes(str.Trim());//Trim()函数用来去除字符串首尾处的空格，得到字符串对应的ASCII的byte数组
@@ -227,7 +235,7 @@ namespace WindowsFormsApplication1
             }
             byte low = (byte)(sum & 0xFF);
             low = (byte)(low | 0x80);
-            char ASCIIstr = (char)low;
+            byte ASCIIstr = low;
             return ASCIIstr;
 
         }
@@ -238,15 +246,17 @@ namespace WindowsFormsApplication1
         public static void SCPITestStart()
         {
             int sendCount = 0;//每条指令最多发送的次数变量，如果次数超过则报错
-            UsbIO.sendToARM(Form1.SCPITestStart + SCPIStrSumChkGet(Form1.SCPITestStart) + Form1.end1 + Form1.end2);
-            Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+            //UsbIO.sendToARM(Form1.SCPITestStart + SCPIStrSumChkGet(Form1.SCPITestStart) + Form1.end1 + Form1.end2);
+            UsbIO.sendToARM(Form1.SCPITestStart);
+            Form1.Delay(40);//先延时40ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
             while (!Form1.SCPIsendSuccessFlag)
             {
                 sendCount++;
                 Form1.Delay(900);//延时900ms
                 if (sendCount < 5)
                 {
-                    UsbIO.sendToARM(Form1.SCPITestStart + SCPIStrSumChkGet(Form1.SCPITestStart) + Form1.end1 + Form1.end2);
+                    //UsbIO.sendToARM(Form1.SCPITestStart + SCPIStrSumChkGet(Form1.SCPITestStart) + Form1.end1 + Form1.end2);
+                    UsbIO.sendToARM(Form1.SCPITestStart);
                 }
                 else
                 {
@@ -258,7 +268,7 @@ namespace WindowsFormsApplication1
             if (sendCount < 5)
             {
                 sendCount = 0;
-                Form1.dialogMessageShow("设备已经开始测试！");
+                //Form1.dialogMessageShow("设备已经开始测试！");
             }
             else
             {
@@ -273,15 +283,17 @@ namespace WindowsFormsApplication1
         public static void SCPITestStop()
         {
             int sendCount = 0;//每条指令最多发送的次数变量，如果次数超过则报错
-            UsbIO.sendToARM(Form1.SCPITestStop + SCPIStrSumChkGet(Form1.SCPITestStop) + Form1.end1 + Form1.end2);
-            Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+            //UsbIO.sendToARM(Form1.SCPITestStop + SCPIStrSumChkGet(Form1.SCPITestStop) + Form1.end1 + Form1.end2);
+            UsbIO.sendToARM(Form1.SCPITestStop);
+            Form1.Delay(40);//先延时40ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
             while (!Form1.SCPIsendSuccessFlag)
             {
                 sendCount++;
                 Form1.Delay(900);//延时900ms
                 if (sendCount < 5)
                 {
-                    UsbIO.sendToARM(Form1.SCPITestStop + SCPIStrSumChkGet(Form1.SCPITestStop) + Form1.end1 + Form1.end2);
+                    //UsbIO.sendToARM(Form1.SCPITestStop + SCPIStrSumChkGet(Form1.SCPITestStop) + Form1.end1 + Form1.end2);
+                    UsbIO.sendToARM(Form1.SCPITestStop);
                 }
                 else
                 {
@@ -293,7 +305,7 @@ namespace WindowsFormsApplication1
             if (sendCount < 5)
             {
                 sendCount = 0;
-                Form1.dialogMessageShow("设备已停止测试！");
+                //Form1.dialogMessageShow("设备已停止测试！");
             }
             else
             {
@@ -314,7 +326,7 @@ namespace WindowsFormsApplication1
             foreach (string s in str)
             {
                 UsbIO.sendToARM(s);
-                Form1.Delay(100);//先延时100ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
+                Form1.Delay(40);//先延时40ms，然后判断是否返回接收成功的信息，如果返回继续发送下一条，没返回则，每隔一段时间发送一次相同的请求，五次后还没返回正确信息则报错
                 while (!Form1.SCPIsendSuccessFlag)
                 {
                     sendCount++;
@@ -331,9 +343,9 @@ namespace WindowsFormsApplication1
                     }
 
                 }
-                if (sendCount<5)
+                if (sendCount < 5)
                 {
-                    sendCount = 0;                                    
+                    sendCount = 0;
                 }
                 else
                 {
@@ -348,7 +360,7 @@ namespace WindowsFormsApplication1
                 //是否关闭测试？
                 Form1.closeTest();//调用关闭测试的函数
             }
-               
+
         }
     }
 }

@@ -12,24 +12,24 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
-     class UsbIO
+    class UsbIO
     {
         private static SerialPort port = new SerialPort();  //定义一个串口对象
         //private static List<int> portNum;  //串口号列表
         public static int timeFlag = 0;
-        public static Form1 form1=new Form1();
+        public static Form1 form1 = new Form1();
 
         public static void setForm(Form1 form)
         {
             form1 = form;
         }
-      //判断是否有串口，并检测所有串口号
-       public static string[] getComNums()
+        //判断是否有串口，并检测所有串口号
+        public static string[] getComNums()
         {
             string[] str = SerialPort.GetPortNames();
             if (str == null)
             {
-                MessageBox.Show("本机没有串口！", "Error");           
+                MessageBox.Show("本机没有串口！", "Error");
             }
             return str;//返回所有检测到的串口数
         }
@@ -50,7 +50,7 @@ namespace WindowsFormsApplication1
             try
             {
                 if (!port.IsOpen)
-                {                   
+                {
                     port.PortName = Form1.portNum;
                     port.BaudRate = 115200;
                     port.DataBits = 8;
@@ -112,14 +112,14 @@ namespace WindowsFormsApplication1
             }
         }
 
-  
+
         //实现在数据接收区显示接收到的SCPI指令的函数
         public static void receiveDataShow(string str)
         {
             form1.receiveBox.AppendText(str);//添加字符串文本，并加上换行符
             form1.receiveBox.ScrollToCaret();//自动显示至最后行              
         }
-       
+
         //实现在数据发送区显示发送的SCPI指令的函数
         public static void sendDataShow(string str)
         {
@@ -130,19 +130,32 @@ namespace WindowsFormsApplication1
 
         //把数据或者参数发送给下位机
         public static void sendToARM(string str)
-        {                
+        {
             if (port.IsOpen)
             {
-                
-                port.Write(str);
-                sendDataShow(str); //调用方法把发送的SCPI指令显示到发送数据窗口            
+
+                //port.Write(str);
+                byte[] bTemp = new byte[str.Length + 3];
+                int i = 0;
+                foreach (char c in str)
+                {
+                    bTemp[i] = (byte)c;
+                    i++;
+                }
+                bTemp[i] = SendDataHandle.SCPIStrSumChkGet(str);
+                bTemp[i + 1] = (byte)Form1.end1;
+                bTemp[i + 2] = (byte)Form1.end2;
+
+                port.Write(bTemp, 0, bTemp.Length);
+
+                sendDataShow(str + SendDataHandle.SCPIStrSumChkGet(str) + Form1.end1 + Form1.end2); //调用方法把发送的SCPI指令显示到发送数据窗口            
             }
             else
             {
                 MessageBox.Show("设备未打开连接");
             }
         }
-  
+
 
     }
 
