@@ -9,7 +9,7 @@ namespace WindowsFormsApplication1
    public class ResultDisplay
     {
         //绘图的列表变量，用于刷新曲线图的列表
-        public List<float> voltageData=new List<float>();//电压数据
+        public List<float> outputVoltageData=new List<float>();//电压数据
         public List<float> electricData = new List<float>();//电流数据
         public List<float> leakElectricData = new List<float>();//漏电流数据
 

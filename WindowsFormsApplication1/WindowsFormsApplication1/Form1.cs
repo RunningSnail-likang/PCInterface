@@ -22,6 +22,7 @@ namespace WindowsFormsApplication1
         public static string leakElectricData;//漏电流数据
         public static string changingPowerData;//充电功率
         public static string insulationRes;//绝缘电阻
+        public static string insulationResTemp;//用来暂存绝缘电阻数据（无单位），以便写入到txt文件中保存
         public static string gearGain;//档位增益
         public static string patternData; //工作模式数据
         public static string outputVoltageData; //输出电压数据
@@ -493,7 +494,7 @@ namespace WindowsFormsApplication1
             timer1.Enabled = false;
             if (electricData != "" && measureVoltageData != "" && leakElectricData != "")//判断是不是第一次请求数据，即变量中有没有结果数据
             {
-                if(resultData.voltageData.Count!=0&& resultData.electricData.Count != 0&& resultData.leakElectricData.Count != 0)
+                if(resultData.outputVoltageData.Count!=0&& resultData.electricData.Count != 0&& resultData.leakElectricData.Count != 0)
                 {
                     SaveDataToLocal.writeFile();//把电压电流和漏电流数据都存入到电脑中去
                 }
@@ -584,7 +585,7 @@ namespace WindowsFormsApplication1
             Res.Text = "";//绝缘电阻清空
             gGain.Text = "";//档位增益清空
             resultData.electricData.Clear();//清空画图LIST中电流数据
-            resultData.voltageData.Clear();//清空画图LIST中电压数据
+            resultData.outputVoltageData.Clear();//清空画图LIST中电压数据
             resultData.leakElectricData.Clear();//清空画图LIST中漏电流数据
         }
 

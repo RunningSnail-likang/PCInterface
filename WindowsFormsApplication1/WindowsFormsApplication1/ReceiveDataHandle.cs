@@ -222,6 +222,7 @@ namespace WindowsFormsApplication1
                         strTemp += c;
                     }
                     Form1.insulationRes = strTemp;//绝缘电阻
+                    Form1.insulationResTemp = strTemp.Substring(0, strTemp.Length - 1);//去掉单位M，存放在暂存字符串中以便写入相应的TXT文档
                     break;
                 case 1:
                     Form1.electricData = str;//充放电流数据(带单位)
@@ -255,7 +256,7 @@ namespace WindowsFormsApplication1
                         string strTemp1 = str.Substring(0, str.Length - 1);//去掉单位V
                         float volTemp = 0;//临时存储不带单位的输出电压数据，以便存入画图列表中
                         bool b1 = float.TryParse(strTemp1, out volTemp);//电压数据转换
-                        Form1.resultData.voltageData.Add(volTemp);//画图列表中添加数据
+                        Form1.resultData.outputVoltageData.Add(volTemp);//画图列表中添加数据
                     }
                     catch (Exception e)
                     {

@@ -37,7 +37,7 @@ namespace WindowsFormsApplication1
                     if (Form1.huatuFlag)
                     {
                         //刷新绘图
-                        voltageGraph.Invoke(voltageUpdate, resultData.voltageData);
+                        voltageGraph.Invoke(voltageUpdate, resultData.outputVoltageData);
                         electricGraph.Invoke(electricUpdate, resultData.electricData);
                         leakElectricGraph.Invoke(leakElectricUpdate, resultData.leakElectricData);
                         Form1.huatuFlag = false;
